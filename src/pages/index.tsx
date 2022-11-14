@@ -1,5 +1,4 @@
-import SessionForm from "../components/SessionForm/SessionForm"
-
+import SessionForm from "../components/sessionForm/SessionForm"
 export default function Home() {
   return (
     <div>
