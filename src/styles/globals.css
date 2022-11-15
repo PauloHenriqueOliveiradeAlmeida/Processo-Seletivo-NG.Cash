@@ -21,7 +21,6 @@ html {
 }
 .container {
   width: 100%;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,6 +39,7 @@ input, button {
   text-align: center;
   padding: 10px;
   width: 100%;
+  background-color: #fff;
 }
 input {
   margin-top: 5px;

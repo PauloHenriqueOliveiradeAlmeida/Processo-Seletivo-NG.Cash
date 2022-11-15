@@ -1,0 +1,61 @@
+.transfersContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    width: 80%;
+    background-color: var(--background-color);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 20px 20px #00000054;
+    margin-top: 60px;
+}
+.transfersContainer main {
+    width: 100%;
+}
+.transfersTable {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    padding: 20px;
+    border-collapse: collapse;
+}
+.transfersTable tbody tr:nth-child(odd) {
+    background-color: var(--background-color);
+}
+.tableHeaders, .tableContent {
+    height: 20px;
+    border-radius: 20px;
+}
+.tableHeaders {
+    background-color: var(--background-color);
+}
+.filters {
+
+    margin: 20px 0px 40px 0px;
+}
+
+.radioFilters {
+    display: flex;
+    justify-content: space-between;
+}
+.radioFilters input[type="radio"] {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid var(--normalColor);
+    width: 5px;
+}
+.radioFilters input[type="radio"]:checked {
+    box-shadow: inset 0px 0px 0px 10px var(--normalColor);
+}
+
+@media (width >= 900px) {
+    .fullPage {
+        height: 100vh;
+    }
+    .radioFilters {
+        justify-content: space-evenly;
+    }
+}

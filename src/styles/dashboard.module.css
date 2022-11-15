@@ -81,7 +81,7 @@
     margin-top: 10px;
 }
 
-@media (width >=900px) {
+@media (width >= 900px) {
     .dashboard {
         flex-direction: row-reverse;
     }
