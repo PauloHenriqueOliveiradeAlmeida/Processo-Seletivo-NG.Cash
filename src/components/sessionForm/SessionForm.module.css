@@ -11,6 +11,7 @@
 .container h1 {
     color: #ececec;
     margin-bottom: 10px;
+    text-transform: uppercase;
 }
 .SessionForm {
     width: 90%;
@@ -37,7 +38,13 @@
 }
 .SessionForm input {
     margin-top: 5px;
+    border: 2px solid #fff;
+    transition: .2s ease-in;
 }
+.SessionForm input:hover {
+    border: 2px solid #4e4376;
+}
+
 .SessionForm button {
     background-image: linear-gradient(to right, #2b5876 0%, #4e4376  51%, #2b5876  100%);
     margin: 10px;
@@ -58,4 +65,9 @@
   color: #fff;
   text-decoration: none;
 }
-     
+
+@media (width >= 1000px) {
+    .SessionForm {
+        width: 50%;
+    }
+}

@@ -16,7 +16,7 @@ function SessionForm(props:{loginOrRegistration: string}) {
                 </div>
 
                 <button>
-                    {props.loginOrRegistration === "Cadastro" ? "Cadastrar" : "Fazer Login"}
+                    {props.loginOrRegistration === "cadastro" ? "Cadastrar" : "Fazer Login"}
                 </button>
             </form>
         </div>

@@ -1,8 +1,7 @@
-import SessionForm from "../components/sessionForm/SessionForm"
 export default function Home() {
   return (
     <div>
-      <SessionForm loginOrRegistration="Cadastro"/>
+      <h1>Dashboard</h1>
     </div>
   )
 }
