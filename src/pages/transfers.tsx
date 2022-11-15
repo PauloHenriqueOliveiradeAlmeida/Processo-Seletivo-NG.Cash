@@ -3,7 +3,7 @@ import styles from "../styles/transfers.module.css";
 function Transfers() {
     
     return (
-        <div className={`container ${styles.fullPage}`}>
+        <div className="container">
 
             <div className={styles.transfersContainer}>
                 <main>
