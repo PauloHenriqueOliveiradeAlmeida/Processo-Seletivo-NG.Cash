@@ -3,10 +3,12 @@ version: '3.4'
 services:
   processoseletivongcash:
     image: processoseletivongcash
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    network_mode: host
+    build: .
+    command: npm run dev
     environment:
       NODE_ENV: production
     ports:
-      - 3000:3000
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
