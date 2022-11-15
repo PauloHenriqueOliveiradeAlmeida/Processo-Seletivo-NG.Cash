@@ -2,7 +2,7 @@ import styles from "./SessionForm.module.css";
 
 function SessionForm(props:{loginOrRegistration: string}) {
     return (
-        <div className={styles.container}>
+        <div className="container">
             <h1>{props.loginOrRegistration}</h1>
             <form className={styles.SessionForm}>
                 <div>

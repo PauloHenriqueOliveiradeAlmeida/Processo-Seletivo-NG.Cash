@@ -1,9 +1,78 @@
 @import url('https://fonts.googleapis.com/css2?family=Secular+One&display=swap');
 
+:root {
+  --background-color: #ffffffb2;
+  --highlightColor: #4e4376;
+  --normalColor: #2b5876;
+}
+
 * {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
   font-family: "Secular One", "Roboto", sans-serif;
   letter-spacing: 1.6px;
+  text-align: center;
+}
+html {
+  background: linear-gradient(36deg, var(--normalColor) 0%, #4e88c3 35%, #2ad293 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.container {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container h1 {
+  color: #ececec;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+input, button {
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+}
+input {
+  margin-top: 5px;
+  border: 2px solid #fff;
+  transition: .2s ease-in;
+}
+input:hover {
+  border: 2px solid var(--normalColor);
+}
+input:focus {
+  border-color: var(--highlightColor);
+}
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #fff inset;
+}
+
+button {
+  background-image: linear-gradient(to right, var(--normalColor) 0%, var(--highlightColor)  51%, var(--normalColor)  100%);
+  margin-top: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+button:hover {
+background-position: right center; /* change the direction of the change here */
+color: #fff;
+text-decoration: none;
 }
