@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model public_Accounts {
+  id                                                                       Int                   @id(map: "Accounts_pk") @default(autoincrement())
+  balance                                                                  Float
+  public_Transactions_public_AccountsTopublic_Transactions_debitedAccount  public_Transactions[] @relation("public_AccountsTopublic_Transactions_debitedAccount")
+  public_Transactions_public_AccountsTopublic_Transactions_creditedAccount public_Transactions[] @relation("public_AccountsTopublic_Transactions_creditedAccount")
+  public_Users                                                             public_Users[]
+
+  @@map("public.Accounts")
+}
+
+model public_Transactions {
+  id                                                                   Int             @id(map: "Transactions_pk") @default(autoincrement())
+  debitedAccount                                                       Int
+  creditedAccount                                                      Int
+  value                                                                Float
+  createdAt                                                            DateTime        @db.Date
+  public_Accounts_public_AccountsTopublic_Transactions_debitedAccount  public_Accounts @relation("public_AccountsTopublic_Transactions_debitedAccount", fields: [debitedAccount], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Transactions_fk0")
+  public_Accounts_public_AccountsTopublic_Transactions_creditedAccount public_Accounts @relation("public_AccountsTopublic_Transactions_creditedAccount", fields: [creditedAccount], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Transactions_fk1")
+
+  @@map("public.Transactions")
+}
+
+model public_Users {
+  id              Int             @id(map: "Users_pk") @default(autoincrement())
+  username        String          @unique @db.VarChar(255)
+  password        String          @db.VarChar(100)
+  accountId       Int
+  public_Accounts public_Accounts @relation(fields: [accountId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Users_fk0")
+
+  @@map("public.Users")
+}
