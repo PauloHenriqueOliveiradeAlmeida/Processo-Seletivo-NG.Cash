@@ -8,5 +8,12 @@ export async function registerUsersDB(username: string, password: string) {
             password,
             accountId: account.id
         }
+    });
+}
+export async function searchUsersDB(username: string) {
+    return prisma.public_Users.findMany({
+        where: {
+            username
+        }
     })
 }
