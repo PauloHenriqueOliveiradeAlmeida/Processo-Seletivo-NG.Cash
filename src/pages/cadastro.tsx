@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
+import { setCookie } from "nookies";
 import styles from "../styles/cadastroLogin.module.css";
+import Router from "next/router";
 
 interface registerForm {
     username: string,
@@ -26,6 +28,14 @@ function Cadastro() {
                 });
                 try {
                     const res = await req.json();
+
+                    setCookie(undefined, "next_auth_token", res.token, {
+                        maxAge: 60 * 60 * 24,
+                        path: "/",
+                        HttpOnly: true
+                    });
+
+                    Router.push("/dashboard");
                 } catch {
                     alert("O Username digitado já está sendo utilizado");
                 }

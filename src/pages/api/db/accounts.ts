@@ -5,5 +5,13 @@ export async function registerAccountsDB() {
         data: {
             balance: 100.00
         }
-    })
+    });
+}
+
+export async function searchAccountsDB(id: number) {
+    return prisma.public_Accounts.findMany({
+        where: {
+            id
+        }
+    });
 }

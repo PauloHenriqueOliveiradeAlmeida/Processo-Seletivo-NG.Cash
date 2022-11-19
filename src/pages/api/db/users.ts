@@ -10,10 +10,13 @@ export async function registerUsersDB(username: string, password: string) {
         }
     });
 }
-export async function searchUsersDB(username: string) {
+export async function searchUsersDB(username?: string, id?: number) {
     return prisma.public_Users.findMany({
         where: {
-            username
+            OR: [
+                {username},
+                {id}
+            ]
         }
     })
 }
