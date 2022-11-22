@@ -41,17 +41,6 @@ input, button {
   width: 100%;
   background-color: #fff;
 }
-input {
-  margin-top: 5px;
-  border: 2px solid #fff;
-  transition: .2s ease-in;
-}
-input:hover {
-  border: 2px solid var(--normalColor);
-}
-input:focus {
-  border-color: var(--highlightColor);
-}
 input:-webkit-autofill {
   box-shadow: 0 0 0 1000px #fff inset;
 }

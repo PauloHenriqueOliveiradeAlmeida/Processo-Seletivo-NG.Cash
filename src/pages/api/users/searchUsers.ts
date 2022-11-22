@@ -12,14 +12,14 @@ export default async function searchUsers(req: NextApiRequest, res: NextApiRespo
         const verifyPassword = bcrypt.compareSync(password, searchUser[0].password);
 
         if (verifyPassword) {
-            return res.json({autenticated: verifyPassword, token: sign({id: searchUser[0].id}, process.env.JWT_SECRET, {
+            return res.json({authenticated: verifyPassword, token: sign({id: searchUser[0].id}, process.env.JWT_SECRET, {
                 expiresIn: 60 * 60 * 24
             })});
         }
         else {
-            return res.json({autenticated: verifyPassword, error: "password"});
+            return res.json({authenticated: verifyPassword, error: "password"});
         }
     }
-    return res.json({autenticated: false, error: "not found"});
+    return res.json({authenticated: false, error: "not found"});
     
 }

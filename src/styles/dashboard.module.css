@@ -51,7 +51,6 @@
     width: 100%;
 }
 
-.dashboard input,
 .dashboard button {
     margin-top: 20px;
 }
@@ -60,6 +59,32 @@
     color: var(--highlightColor);
     font-size: 4rem;
 }
+
+.fieldsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    width: 60%;
+    margin: 5px auto 0px auto;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    transition: .2s ease-in;
+}
+
+.fieldsContainer:hover {
+    border: 2px solid var(--normalColor);
+}
+
+.fieldsContainer:focus {
+    border-color: var(--highlightColor);
+}
+
+.fieldsContainer input {
+    margin: 0px;
+    width: 100% !important;
+}
+
 
 .transfersAside {
     transition: all .2s linear;
@@ -70,18 +95,18 @@
     transform: translateY(-10px);
 }
 
-.transfersAside div {
+.transactionCard {
     display: flex;
-    justify-content: space-between;
-    padding: 5px;
+    justify-content: space-around;
     align-items: center;
+    padding: 5px;
     font-size: 0.7rem;
     background-color: var(--background-color);
     border-radius: 6px;
     margin-top: 10px;
 }
 
-@media (width >= 900px) {
+@media (width >=900px) {
     .dashboard {
         flex-direction: row-reverse;
     }
