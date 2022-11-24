@@ -7,6 +7,7 @@ import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import getTransactions from "./api/transactions/getTransactions";
+import { verify } from "jsonwebtoken";
 
 interface serverProps {
     balance: number,
@@ -37,7 +38,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
 
     const logOut = () => {
         nookies.destroy(null, "next_auth_token");
-        Router.push("/login");
+        Router.push("/");
     }
     
     function formatDate(date: string) {
@@ -159,7 +160,8 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
 export async function getServerSideProps(ctx: NextPageContext) {
     try {
         const token = nookies.get(ctx);
-        const transactionsInfo = await getTransactions(token);
+        const id = verify(token.next_auth_token, process.env.JWT_SECRET);
+        const transactionsInfo = await getTransactions(id);
 
         return {
             props: {

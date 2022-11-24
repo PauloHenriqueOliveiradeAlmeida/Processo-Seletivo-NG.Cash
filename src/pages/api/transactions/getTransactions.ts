@@ -1,4 +1,4 @@
-import { verify } from "jsonwebtoken";
+import { JwtPayload, verify } from "jsonwebtoken";
 import { searchAccountsDB } from "../db/accounts";
 import { searchTransactionsDB } from "../db/transactions";
 import { searchUsersDB } from "../db/users";
@@ -11,8 +11,8 @@ interface TransactionDatas {
     value: number
 }
 
-export default async function getTransactions(token: { [next_auth_token: string]: string; }) {
-    const id: any = verify(token.next_auth_token, process.env.JWT_SECRET);
+export default async function getTransactions(id: any) {
+
     const accountId = await searchUsersDB(undefined, id.id);
     
     const accountDatas = await searchAccountsDB(accountId[0].accountId);

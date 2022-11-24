@@ -1,6 +1,9 @@
-import Image from "next/image"
-import Link from "next/link"
-import styles from "../styles/index.module.css"
+import { verify } from "jsonwebtoken";
+import { NextPageContext } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import nookies from "nookies";
+import styles from "../styles/index.module.css";
 export default function Home() {
   return (
 	<main className={styles.mainContainer}>
@@ -22,4 +25,25 @@ export default function Home() {
 		</div>
     </main>
   )
+}
+
+export function getServerSideProps(ctx: NextPageContext) {
+	try {
+		const token = nookies.get(ctx);
+		const id: any = verify(token.next_auth_token, process.env.JWT_SECRET);
+
+		if (id.id) {
+			return {
+				redirect: {
+					permanent: false,
+					destination: "/dashboard"
+				}
+			}
+		}
+	}
+	catch {
+		return {
+			props: {}
+		}
+	}
 }

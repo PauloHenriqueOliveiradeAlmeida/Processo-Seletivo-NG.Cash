@@ -3,6 +3,7 @@ import styles from "../styles/transfers.module.css";
 import getTransactions from "./api/transactions/getTransactions";
 import nookies from "nookies";
 import { ChangeEvent, useEffect, useState } from "react";
+import { verify } from "jsonwebtoken";
 
 interface serverProps {
     balance: number,
@@ -209,7 +210,8 @@ function Transfers({transactions, username}: serverProps) {
 export async function getServerSideProps(ctx: NextPageContext) {
     try {
         const token = nookies.get(ctx);
-        const transactionsInfo = await getTransactions(token);
+        const id = verify(token.next_auth_token, process.env.JWT_SECRET);
+        const transactionsInfo = await getTransactions(id);
 
         return {
             props: {
