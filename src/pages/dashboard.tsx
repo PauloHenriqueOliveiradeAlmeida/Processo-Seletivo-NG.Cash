@@ -9,10 +9,11 @@ import { useEffect, useState } from "react";
 import { searchUsersDB } from "./api/db/users";
 import { searchAccountsDB } from "./api/db/accounts";
 import { searchTransactionsDB } from "./api/db/transactions";
+import Router from "next/router";
 
 interface serverProps {
     balance: number,
-    transactions: string[] | number[] | any,
+    transactions: Array<TransactionDatas>,
     accountId: number,
     username: string
 }
@@ -22,11 +23,18 @@ interface TransactionForm {
     transactionValue: number
 }
 
-interface Transactiondatas {
+interface TransactionDatas {
     createdAt: string,
     creditedAccount: string,
     debitedAccount: string,
     value: number
+}
+
+
+
+const logOut = () => {
+    nookies.destroy(null, "next_auth_token");
+    Router.push("/login");
 }
 
 function formatDate(date: string) {
@@ -36,19 +44,21 @@ function formatDate(date: string) {
 
 function Dashboard({balance, transactions, accountId, username}: serverProps) {
     const {register, handleSubmit} = useForm<TransactionForm>();
-    const [transfers, setTransfers] = useState<JSX.Element[]>();
+    const [transfers, setTransfers] = useState<JSX.Element[] | JSX.Element>();
 
     useEffect(() => {
         let transfers: JSX.Element[] = [];
-
-        console.log(transactions);
         
         if (transactions.length == 0) {
-
+            setTransfers(
+                <div className={styles.transactionCard}>
+                    <p>Ainda não há nenhuma transação realizada</p>
+                </div>
+            );
         }
 
         else {
-            transactions.slice(0, 8).forEach((data: Transactiondatas, index: number) => {
+            transactions.slice(0, 8).forEach((data, index: number) => {
                 const date = formatDate(data.createdAt);
 
                 transfers.push(
@@ -75,17 +85,37 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
     }, [transactions, username]);
 
     async function makeTransaction(data: TransactionForm) {
-        const req = await fetch("/api/transactions/newTransaction", {
-            method: "POST",
-            body: JSON.stringify({
-                id: accountId,
-                usernameReceives: data.username,
-                value: data.transactionValue
-            }),
-            headers: {
-                "Content-Type": "application/json"
+        if (data.username != username) {
+            if (data.transactionValue <= balance) {
+                const req = await fetch("/api/transactions/newTransaction", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        id: accountId,
+                        usernameReceives: data.username,
+                        value: data.transactionValue
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const res = await req.json();
+
+                if (res.error === "user not found") {
+                    alert("Usuário não encontrado, tente novamente com outro username");
+                }
+                else {
+                    Router.reload();
+                }
+                
             }
-        });
+            else {
+                alert("O valor digitado excede seu balanço, tente com um valor menor");
+            }
+        }
+        else {
+            alert("Infelizmente não é possível transferir dinheiro para si mesmo, tente com outro username");
+        }
     }
 
     return (
@@ -110,7 +140,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
                         <button type="submit">Transferir</button>
                     </form>
 
-                    <FontAwesomeIcon icon={faRightFromBracket} className={styles.logOutButton}/>
+                    <FontAwesomeIcon icon={faRightFromBracket} className={styles.logOutButton} onClick={logOut}/>
                 </main>
                 <aside className={styles.transfersAside}>
                     <h2>Transferências Recentes</h2>
@@ -126,7 +156,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
 }
 
 export async function getServerSideProps(ctx: NextPageContext) {
-    // try {
+    try {
         const token = nookies.get(ctx);
 
         const id: any = verify(token.next_auth_token, process.env.JWT_SECRET);
@@ -139,7 +169,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
         const transactions = await searchTransactionsDB(accountDatas[0].id);
     
             
-        const transactionsInfo: Array<Transactiondatas> = [];
+        const transactionsInfo: Array<TransactionDatas> = [];
 
         const debitsInformations = [];
         const creditsInformations = [];
@@ -178,15 +208,15 @@ export async function getServerSideProps(ctx: NextPageContext) {
                 username: accountId[0].username
             }
         }
-    // }
-    // catch {
-    //     return {
-    //         redirect: {
-    //             permanent: false,
-    //             destination: "/",
-    //           }
-    //     }
-    // }
+    }
+    catch {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/",
+              }
+        }
+    }
 }
 
 export default Dashboard;
