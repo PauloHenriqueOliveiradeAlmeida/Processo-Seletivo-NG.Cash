@@ -1,29 +1,193 @@
+import { NextPageContext } from "next";
 import styles from "../styles/transfers.module.css";
+import getTransactions from "./api/transactions/getTransactions";
+import nookies from "nookies";
+import { ChangeEvent, useEffect, useState } from "react";
 
-function Transfers() {
+interface serverProps {
+    balance: number,
+    transactions: Array<TransactionDatas>,
+    accountId: number,
+    username: string
+}
+interface TransactionDatas {
+    createdAt: string,
+    creditedAccount: string,
+    debitedAccount: string,
+    value: number
+}
+
+
+
+function Transfers({transactions, username}: serverProps) {
+    const [transfers, setTransfers] = useState<Array<JSX.Element> | JSX.Element>()
+
+    function formatDate(date: string, ISODate: boolean = false) {
+        const [year, month, day] = date.substring(0, 10).split("-");
+        const dateString = !ISODate ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+        return dateString;
+    }
+
+    function showTransactionsWithoutFilter() {
+        let transfers: JSX.Element[] = [];
+        
+        if (transactions.length == 0) {
+            setTransfers(
+                <tr className={styles.transactionCard}>
+                    <td colSpan={3}>Ainda não há nenhuma transação realizada</td>
+                </tr>
+            );
+        }
+
+        else {
+            transactions.forEach((data, index: number) => {
+                const date = formatDate(data.createdAt);
+
+                transfers.push(
+                    <tr key={`tr${index}`} className={styles.transactionCard}>
+                        <td key={`date${index}`}>{date}</td>
+                        <td key={`username${index}`}>
+                            {
+                            data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
+                            }
+                        </td>
+                        <td key={`value${index}`}>
+                            {
+                                data.creditedAccount === username ?
+                                `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
+                                `- ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}`
+                            }
+                        </td>
+                    </tr>
+                );
+
+            });
+            setTransfers(transfers);
+        }
+    }
+
+    function filterTransactionsWithDate(event: ChangeEvent<HTMLInputElement>) {
+        let transfers: JSX.Element[] = [];
+        transactions.forEach((data, index) => {
+            const date = formatDate(data.createdAt, true);
+            if (date === event.target.value) {
+                const [year, month, day]  = date.split("-");
+                transfers.push(
+                    <tr key={`tr${index}`} className={styles.transactionCard}>
+                        <td key={`date${index}`}>{`${day}/${month}/${year}`}</td>
+                        <td key={`username${index}`}>
+                            {
+                            data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
+                            }
+                        </td>
+                        <td key={`value${index}`}>
+                            {
+                                data.creditedAccount === username ?
+                                `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
+                                `- ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}`
+                            }
+                        </td>
+                    </tr>
+                );
+            }
+        });
+        setTransfers(transfers);
+    }
+
+    function filterTransactionsWithCashIn() {
+        let transfers: JSX.Element[] = [];
+        transactions.forEach((data, index) => {
+            if (data.creditedAccount === username) {
+                const date = formatDate(data.createdAt);
+                transfers.push(
+                    <tr key={`tr${index}`} className={styles.transactionCard}>
+                        <td key={`date${index}`}>{date}</td>
+                        <td key={`username${index}`}>{data.debitedAccount}</td>
+                        <td key={`value${index}`}>+ {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
+                    </tr>
+                );
+            }
+        });
+        setTransfers(transfers);
+    }
+
+    function filterTransactionWithCashOut() {
+        let transfers: JSX.Element[] = [];
+        transactions.forEach((data, index) => {
+            if (data.debitedAccount === username) {
+                const date = formatDate(data.createdAt);
+                transfers.push(
+                    <tr key={`tr${index}`} className={styles.transactionCard}>
+                        <td key={`date${index}`}>{date}</td>
+                        <td key={`username${index}`}>{data.creditedAccount}</td>
+                        <td key={`value${index}`}>- {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
+                    </tr>
+                );
+            }
+        });
+        setTransfers(transfers);
+    }
+
+    useEffect(() => {
+        let transfers: JSX.Element[] = [];
+        
+        if (transactions.length == 0) {
+            setTransfers(
+                <tr className={styles.transactionCard}>
+                    <td colSpan={3}>Ainda não há nenhuma transação realizada</td>
+                </tr>
+            );
+        }
+
+        else {
+            transactions.forEach((data, index: number) => {
+                const date = formatDate(data.createdAt);
+
+                transfers.push(
+                    <tr key={`tr${index}`} className={styles.transactionCard}>
+                        <td key={`date${index}`}>{date}</td>
+                        <td key={`username${index}`}>
+                            {
+                            data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
+                            }
+                        </td>
+                        <td key={`value${index}`}>
+                            {
+                                data.creditedAccount === username ?
+                                `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
+                                `- ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}`
+                            }
+                        </td>
+                    </tr>
+                );
+
+            });
+            setTransfers(transfers);
+        }
+    }, [transactions, username]);
     
     return (
         <div className="container">
 
             <div className={styles.transfersContainer}>
                 <main>
-                    <form className={styles.filters}>
+                    <div className={styles.filters}>
                         <label htmlFor="dateTransactionFilter">Data de Transação:</label>
-                        <input type="date" id="dateTransactionFilter" />
+                        <input type="date" id="dateTransactionFilter" onChange={(e) => {filterTransactionsWithDate(e)}}/>
 
                         <div className={styles.radioFilters}>
                             <div>
                                 <label htmlFor="cashInFilter">Cash-In</label><br />
-                                <input type="radio" name="cashRadioFilter" id="cashInFilter" />
+                                <input type="radio" name="cashRadioFilter" id="cashInFilter" onClick={() => {filterTransactionsWithCashIn()}}/>
                             </div>
 
                             <div>
                                 <label htmlFor="cashOutFilter">Cash-Out</label><br />
-                                <input type="radio" name="cashRadioFilter" id="cashOutFilter" />
+                                <input type="radio" name="cashRadioFilter" id="cashOutFilter" onClick={() => {filterTransactionWithCashOut()}}/>
                             </div>
                         </div>
-                        <button>Buscar</button>
-                    </form>
+                        <button className={styles.clearFiltersButton} onClick={() => {showTransactionsWithoutFilter()}}>Limpar Filtros</button>
+                    </div>
                     <table className={styles.transfersTable}>
                         <tbody>
                             <tr className={styles.tableHeaders}>
@@ -31,11 +195,7 @@ function Transfers() {
                                 <th>Username</th>
                                 <th>Valor</th>
                             </tr>
-                            <tr className={styles.tableContent}>
-                                <td>ass</td>
-                                <td>assa</td>
-                                <td>ass</td>
-                            </tr>
+                            {transfers}
                         </tbody>
                     </table>
                 </main>
@@ -44,5 +204,30 @@ function Transfers() {
     );
 
 }
+
+
+export async function getServerSideProps(ctx: NextPageContext) {
+    try {
+        const token = nookies.get(ctx);
+        const transactionsInfo = await getTransactions(token);
+
+        return {
+            props: {
+                transactions: transactionsInfo.transactionsInfo,
+                username: transactionsInfo.username
+            }
+        }
+    }
+    catch {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/"
+            }
+        }
+    }
+    
+}
+
 
 export default Transfers;

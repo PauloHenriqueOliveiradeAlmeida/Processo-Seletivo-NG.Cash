@@ -31,6 +31,7 @@
 }
 .tableHeaders {
     background-color: var(--background-color);
+    border-bottom: 2px solid var(--normalColor);
 }
 .filters {
 
@@ -46,9 +47,29 @@
     background-color: #fff;
     border: 1px solid var(--normalColor);
     width: 5px;
+    transition: all .2s linear;
 }
 .radioFilters input[type="radio"]:checked {
     box-shadow: inset 0px 0px 0px 10px var(--normalColor);
+}
+
+.clearFiltersButton {
+    background-image: linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%);
+    text-align: center;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 20px #eee;
+    display: block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    transition: all .2s linear;
+    cursor: pointer;
+}
+
+.clearFiltersButton:hover {
+    background-position: right center;
+    color: #fff;
+    text-decoration: none;
 }
 
 @media (width >= 900px) {

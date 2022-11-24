@@ -1,15 +1,12 @@
 import styles from "../styles/dashboard.module.css";
 import nookies from "nookies";
-import { verify } from "jsonwebtoken";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
-import { searchUsersDB } from "./api/db/users";
-import { searchAccountsDB } from "./api/db/accounts";
-import { searchTransactionsDB } from "./api/db/transactions";
 import Router from "next/router";
+import getTransactions from "./api/transactions/getTransactions";
 
 interface serverProps {
     balance: number,
@@ -32,19 +29,55 @@ interface TransactionDatas {
 
 
 
-const logOut = () => {
-    nookies.destroy(null, "next_auth_token");
-    Router.push("/login");
-}
 
-function formatDate(date: string) {
-    const [year, month, day] = date.substring(0, 10).split("-");
-    return `${day}/${month}/${year}`;
-}
 
 function Dashboard({balance, transactions, accountId, username}: serverProps) {
     const {register, handleSubmit} = useForm<TransactionForm>();
     const [transfers, setTransfers] = useState<JSX.Element[] | JSX.Element>();
+
+    const logOut = () => {
+        nookies.destroy(null, "next_auth_token");
+        Router.push("/login");
+    }
+    
+    function formatDate(date: string) {
+        const [year, month, day] = date.substring(0, 10).split("-");
+        return `${day}/${month}/${year}`;
+    }
+
+    async function makeTransaction(data: TransactionForm) {
+        if (data.username != username) {
+            if (data.transactionValue <= balance) {
+                const req = await fetch("/api/transactions/newTransaction", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        id: accountId,
+                        usernameReceives: data.username,
+                        value: data.transactionValue
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const res = await req.json();
+
+                if (res.error === "user not found") {
+                    alert("Usuário não encontrado, tente novamente com outro username");
+                }
+                else {
+                    Router.reload();
+                }
+                
+            }
+            else {
+                alert("O valor digitado excede seu balanço, tente com um valor menor");
+            }
+        }
+        else {
+            alert("Infelizmente não é possível transferir dinheiro para si mesmo, tente com outro username");
+        }
+    }
 
     useEffect(() => {
         let transfers: JSX.Element[] = [];
@@ -84,39 +117,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
         }
     }, [transactions, username]);
 
-    async function makeTransaction(data: TransactionForm) {
-        if (data.username != username) {
-            if (data.transactionValue <= balance) {
-                const req = await fetch("/api/transactions/newTransaction", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        id: accountId,
-                        usernameReceives: data.username,
-                        value: data.transactionValue
-                    }),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                const res = await req.json();
-
-                if (res.error === "user not found") {
-                    alert("Usuário não encontrado, tente novamente com outro username");
-                }
-                else {
-                    Router.reload();
-                }
-                
-            }
-            else {
-                alert("O valor digitado excede seu balanço, tente com um valor menor");
-            }
-        }
-        else {
-            alert("Infelizmente não é possível transferir dinheiro para si mesmo, tente com outro username");
-        }
-    }
+    
 
     return (
         <div className={`container ${styles.fullPage}`}>
@@ -142,7 +143,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
 
                     <FontAwesomeIcon icon={faRightFromBracket} className={styles.logOutButton} onClick={logOut}/>
                 </main>
-                <aside className={styles.transfersAside}>
+                <aside className={styles.transfersAside} onClick={() => {Router.push("/transfers")}}>
                     <h2>Transferências Recentes</h2>
                     <div>
                         {transfers}
@@ -158,54 +159,14 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
 export async function getServerSideProps(ctx: NextPageContext) {
     try {
         const token = nookies.get(ctx);
-
-        const id: any = verify(token.next_auth_token, process.env.JWT_SECRET);
-
-        const accountId = await searchUsersDB(undefined, id.id);
-        
-
-        const accountDatas = await searchAccountsDB(accountId[0].accountId);
-
-        const transactions = await searchTransactionsDB(accountDatas[0].id);
-    
-            
-        const transactionsInfo: Array<TransactionDatas> = [];
-
-        const debitsInformations = [];
-        const creditsInformations = [];
-
-        const debitsUsername: string[] = [];
-        const creditsUsername: string[] = [];
-
-        for await (const data of transactions) {
-            debitsInformations.push(await searchUsersDB(undefined, undefined, data.debitedAccount));
-            creditsInformations.push(await searchUsersDB(undefined, undefined, data.creditedAccount));
-        }
-
-        
-        debitsInformations.forEach((data) => {
-            debitsUsername.push(data[0].username);    
-        });
-
-        creditsInformations.forEach((data) => {
-            creditsUsername.push(data[0].username);
-        });
-
-        transactions.forEach((data, index) => {
-            transactionsInfo.push({
-                debitedAccount: debitsUsername[index],
-                creditedAccount: creditsUsername[index],
-                createdAt: data.createdAt.toISOString(),
-                value: data.value
-            });
-        });
+        const transactionsInfo = await getTransactions(token);
 
         return {
             props: {
-                balance: accountDatas[0].balance,
-                transactions: transactionsInfo,
-                accountId: accountId[0].accountId,
-                username: accountId[0].username
+                balance: transactionsInfo.balance,
+                transactions: transactionsInfo.transactionsInfo,
+                accountId: transactionsInfo.id,
+                username: transactionsInfo.username
             }
         }
     }
@@ -213,10 +174,11 @@ export async function getServerSideProps(ctx: NextPageContext) {
         return {
             redirect: {
                 permanent: false,
-                destination: "/",
-              }
+                destination: "/"
+            }
         }
     }
+    
 }
 
 export default Dashboard;
