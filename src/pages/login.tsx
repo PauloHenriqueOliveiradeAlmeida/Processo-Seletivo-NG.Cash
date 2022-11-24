@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../contexts/context";
@@ -32,6 +33,7 @@ function Login() {
 
             	<button>Cadastrar</button>
             </form>
+            <Link href="/cadastro" className="link">Não tem conta? Crie Agora</Link>
         </div>
     );
 }

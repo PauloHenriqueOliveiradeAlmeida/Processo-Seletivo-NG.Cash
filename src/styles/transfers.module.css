@@ -34,7 +34,6 @@
     border-bottom: 2px solid var(--normalColor);
 }
 .filters {
-
     margin: 20px 0px 40px 0px;
 }
 
@@ -54,7 +53,7 @@
 }
 
 .clearFiltersButton {
-    background-image: linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%);
+    background-image: linear-gradient(to right, #FF512F 0%, var(--warnColor) 51%, #FF512F 100%);
     text-align: center;
     background-size: 200% auto;
     color: white;
@@ -70,6 +69,12 @@
     background-position: right center;
     color: #fff;
     text-decoration: none;
+}
+.debitedValue {
+    color: var(--warnColor);
+}
+.creditedValue {
+    color: var(--highlightColor);
 }
 
 @media (width >= 900px) {

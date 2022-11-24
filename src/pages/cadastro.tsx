@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { setCookie } from "nookies";
 import styles from "../styles/cadastroLogin.module.css";
 import Router from "next/router";
+import Link from "next/link";
 
 interface registerForm {
     username: string,
@@ -67,6 +68,8 @@ function Cadastro() {
 
                 <button>Cadastrar</button>
             </form>
+            
+            <Link href="/login" className="link">Já tem Conta? Faça Login</Link>
         </div>
     );
 }

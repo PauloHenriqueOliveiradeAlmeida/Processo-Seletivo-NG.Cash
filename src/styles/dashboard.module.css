@@ -106,6 +106,14 @@
     margin-top: 10px;
 }
 
+.debitedValue {
+    color: var(--warnColor);
+}
+
+.creditedValue {
+    color: var(--highlightColor);
+}
+
 @media (width >=900px) {
     .dashboard {
         flex-direction: row-reverse;

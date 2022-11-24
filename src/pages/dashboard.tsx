@@ -102,7 +102,7 @@ function Dashboard({balance, transactions, accountId, username}: serverProps) {
                             data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
                             }
                         </p>
-                        <p key={`value${index}`}>
+                        <p key={`value${index}`} className={data.debitedAccount === username ? styles.debitedValue : styles.creditedValue}>
                             {
                                 data.creditedAccount === username ?
                                 `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :

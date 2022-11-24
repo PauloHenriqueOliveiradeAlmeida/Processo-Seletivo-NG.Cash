@@ -51,7 +51,7 @@ function Transfers({transactions, username}: serverProps) {
                             data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
                             }
                         </td>
-                        <td key={`value${index}`}>
+                        <td key={`value${index}`} className={data.debitedAccount === username ? styles.debitedValue : styles.creditedValue}>
                             {
                                 data.creditedAccount === username ?
                                 `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
@@ -80,7 +80,7 @@ function Transfers({transactions, username}: serverProps) {
                             data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
                             }
                         </td>
-                        <td key={`value${index}`}>
+                        <td key={`value${index}`} className={data.debitedAccount === username ? styles.debitedValue : styles.creditedValue}>
                             {
                                 data.creditedAccount === username ?
                                 `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
@@ -103,7 +103,7 @@ function Transfers({transactions, username}: serverProps) {
                     <tr key={`tr${index}`} className={styles.transactionCard}>
                         <td key={`date${index}`}>{date}</td>
                         <td key={`username${index}`}>{data.debitedAccount}</td>
-                        <td key={`value${index}`}>+ {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
+                        <td key={`value${index}`} className={styles.creditedValue}>+ {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
                     </tr>
                 );
             }
@@ -120,7 +120,7 @@ function Transfers({transactions, username}: serverProps) {
                     <tr key={`tr${index}`} className={styles.transactionCard}>
                         <td key={`date${index}`}>{date}</td>
                         <td key={`username${index}`}>{data.creditedAccount}</td>
-                        <td key={`value${index}`}>- {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
+                        <td key={`value${index}`} className={styles.debitedValue}>- {data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</td>
                     </tr>
                 );
             }
@@ -151,7 +151,7 @@ function Transfers({transactions, username}: serverProps) {
                             data.creditedAccount === username ? data.debitedAccount : data.creditedAccount
                             }
                         </td>
-                        <td key={`value${index}`}>
+                        <td key={`value${index}`} className={data.debitedAccount === username ? styles.debitedValue : styles.creditedValue}>
                             {
                                 data.creditedAccount === username ?
                                 `+ ${data.value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}` :
