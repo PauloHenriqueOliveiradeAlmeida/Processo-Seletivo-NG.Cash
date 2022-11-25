@@ -36,7 +36,6 @@ este é um Banking desenvolvido para o processo seletivo da NG.Cash
 Para o projeto funcionar, antes de tudo você precisará ter instalado:
 
 * Docker
-* Docker Compose
 * Serviço de Banco de Dados Postgres (opcional)
 
 
@@ -87,9 +86,9 @@ npx prisma generate
 
 ## 🏃‍♂️ Testando
 
-Rode o Docker Compose
+Rode o Container Docker
 ```bash
-  docker-compose up
+  docker run -p 3000:3000 pauloalmeida/processoseletivo-ng.cash
 ```
 no terminal e abra a URL
 
