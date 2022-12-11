@@ -20,7 +20,6 @@ este é um Banking desenvolvido para o processo seletivo da NG.Cash
 **Back-end:**
 
 ![NextJS](https://img.shields.io/badge/-NextJS-black?style=for-the-badge&logo=next.js)
-![NodeJS](https://img.shields.io/badge/-NodeJS-green?style=for-the-badge&logo=node.js&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/-postgresql-336791?logo=postgresql&logoColor=white&style=for-the-badge)
 ![PrismaORM](https://img.shields.io/badge/-prisma-black?logo=prisma&logoColor=white&style=for-the-badge)
 
