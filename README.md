@@ -50,6 +50,12 @@ Abra a pasta gerada no terminal:
 ```bash
   cd processo-seletivo-NG.Cash
 ```
+
+## 💾 Banco de Dados
+
+Caso queira usar seu próprio Banco de Dados, importe o arquivo ```database.sql``` em seu Banco e o inicie, caso não tenha um servidor de Banco de Dados Postgres, pule esta etapa.
+
+
 ## 👾 Variáveis de Ambiente
 Para o projeto funcionar, você precisará criar/editar o arquivo
 ```.env``` e adicionar as seguintes variáveis:
@@ -58,10 +64,10 @@ Para o projeto funcionar, você precisará criar/editar o arquivo
 DATABASE_URL=url do seu banco postgres
 JWT_SECRET=senha para armazenar informações em tokens JWT
 ```
-Caso não possua um serviço de Banco, pode usar minha credencial:
+Caso não possua um serviço de Bancode Dados Postgres, use a seguinte credencial:
 
 ```bash
-DATABASE_URL=postgres://xdymmpvdhhdyux:5886c51f2e188e9fd6579f37ab7b812123c67f6e9bcb168586be0fbfc5338881@ec2-54-157-16-196.compute-1.amazonaws.com:5432/d3olu8si36l82q
+DATABASE_URL=postgres://dstatqvl:0WRyADbIdupQ5kAugyE08EMRFEYSKHEm@babar.db.elephantsql.com/dstatqvl
 ```
 
 
@@ -93,3 +99,10 @@ Rode o Container com o Docker Compose
 no terminal e abra a URL
 
 https://localhost:3000
+
+
+## ☕ Demonstração ao Vivo
+
+Caso queira ver a demonstração, acesse:
+
+https://processo-seletivo-ng-cash.vercel.app/
